@@ -17,7 +17,34 @@ Analyzes Airflow logs and provides structured diagnostics with actionable fix su
 
 ## Architecture
 ```
-Log → Diagnostic Agent → Fix Agent → Response
+graph TD
+    A[Log Input] --> B(FastAPI Endpoint /diagnose)
+    B --> C{Pydantic Validation}
+    C -- Valid --> D[Diagnostic Agent (LLM)]
+    D --> E{Diagnosis Result}
+    E --> F[Fix Suggestion Agent (LLM)]
+    F --> G{Fix Suggestion Result}
+    G --> H[Structured JSON Response]
+
+    subgraph LogMind API
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#fcf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+    style F fill:#fcf,stroke:#333,stroke-width:2px
+    style G fill:#ccf,stroke:#333,stroke-width:2px
+    style H fill:#bbf,stroke:#333,stroke-width:2px
+
 ```
 
 **Agent 1** analyzes the log and categorizes the error  
