@@ -16,7 +16,6 @@ Analyzes Airflow logs and provides structured diagnostics with actionable fix su
 - Automatic API documentation
 
 ## Architecture
-```
 graph TD
     A[Log Input] --> B(FastAPI Endpoint /diagnose)
     B --> C{Pydantic Validation}
@@ -44,8 +43,6 @@ graph TD
     style F fill:#fcf,stroke:#333,stroke-width:2px
     style G fill:#ccf,stroke:#333,stroke-width:2px
     style H fill:#bbf,stroke:#333,stroke-width:2px
-
-```
 
 **Agent 1** analyzes the log and categorizes the error  
 **Agent 2** receives the diagnosis and suggests actionable fixes
