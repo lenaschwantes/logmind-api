@@ -4,24 +4,28 @@ Automated log diagnostic API for Airflow using multi-agent LLM architecture.
 
 ## What It Does
 
-Analyzes Airflow logs and provides structured diagnostics with actionable fix suggestions. Uses two specialized LLM agents working in sequence: one identifies the problem, the other suggests how to fix it.
+Analyzes Airflow logs and provides structured diagnostics with actionable fix suggestions. It uses two specialized LLM agents working in sequence: one identifies the problem, the other suggests how to fix it.
 
 ## Current Features
 
-- Two-agent architecture (diagnostic + fix suggestion)
-- OpenAI GPT-4o-mini integration
-- Structured JSON responses with confidence scoring
-- Input validation with Pydantic
-- Docker containerization
-- Automatic API documentation
+*   Two-agent architecture (diagnostic + fix suggestion)
+*   OpenAI GPT-4o-mini integration
+*   Structured JSON responses with confidence scoring
+*   Input validation with Pydantic
+*   Docker containerization
+*   Automatic API documentation
 
 ## Architecture
+
+The LogMind API architecture is designed to process logs efficiently and intelligently, using a multi-agent approach. The data flow and interaction between components are illustrated in the diagram below:
+
+```mermaid
 graph TD
     A[Log Input] --> B(FastAPI Endpoint /diagnose)
     B --> C{Pydantic Validation}
-    C -- Valid --> D[Diagnostic Agent (LLM)]
+    C -- Valid --> D["Diagnostic Agent (LLM)"]
     D --> E{Diagnosis Result}
-    E --> F[Fix Suggestion Agent (LLM)]
+    E --> F["Fix Suggestion Agent (LLM)"]
     F --> G{Fix Suggestion Result}
     G --> H[Structured JSON Response]
 
@@ -43,15 +47,17 @@ graph TD
     style F fill:#fcf,stroke:#333,stroke-width:2px
     style G fill:#ccf,stroke:#333,stroke-width:2px
     style H fill:#bbf,stroke:#333,stroke-width:2px
+```
 
-**Agent 1** analyzes the log and categorizes the error  
-**Agent 2** receives the diagnosis and suggests actionable fixes
+This separation ensures each agent is focused and optimized for its specific task:
 
-This separation ensures each agent is focused and optimized for its specific task.
+*   **Agent 1** analyzes the log and categorizes the error.
+*   **Agent 2** receives the diagnosis and suggests actionable fixes.
 
 ## Quick Start
 
 ### With Docker
+
 ```bash
 # Setup
 cp .env.example .env
@@ -65,6 +71,7 @@ curl http://localhost:8000/docs
 ```
 
 ### Without Docker
+
 ```bash
 # Install
 python3 -m venv venv
@@ -82,6 +89,7 @@ uvicorn main:app --reload
 ## Example Usage
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:8000/diagnose \
   -H "Content-Type: application/json" \
@@ -92,6 +100,7 @@ curl -X POST http://localhost:8000/diagnose \
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -104,6 +113,7 @@ curl -X POST http://localhost:8000/diagnose \
 ```
 
 ## Project Structure
+
 ```
 logmind-api/
 ├── app/
@@ -118,34 +128,29 @@ logmind-api/
 
 ## Technical Stack
 
-- **Framework:** FastAPI
-- **Validation:** Pydantic
-- **LLM:** OpenAI GPT-4o-mini
-- **Deployment:** Docker + Docker Compose
-- **Python:** 3.12+
+*   **Framework:** FastAPI
+*   **Validation:** Pydantic
+*   **LLM:** OpenAI GPT-4o-mini
+*   **Deployment:** Docker + Docker Compose
+*   **Python:** 3.12+
 
 ## Key Design Choices
 
-**Why multi-agent?**  
-Separating diagnostic and solution into different agents improves accuracy. Each can be optimized independently with targeted prompts.
-
-**Why sequential processing?**  
-The fix agent needs the diagnostic results as context. This ensures suggestions are relevant to the specific error identified, not generic troubleshooting.
-
-**Why structured outputs?**  
-Using JSON response format eliminates parsing errors and enables type-safe integration with other systems.
+*   **Why multi-agent?** Separating diagnosis and solution into different agents improves accuracy. Each can be optimized independently with targeted prompts.
+*   **Why sequential processing?** The fix agent needs the diagnostic results as context. This ensures suggestions are relevant to the specific error identified, not generic troubleshooting.
+*   **Why structured outputs?** Using JSON response format eliminates parsing errors and enables type-safe integration with other systems.
 
 ## Performance
 
-- Response time: 4-6 seconds (two sequential LLM calls)
-- Cost per request: ~$0.0002 (GPT-4o-mini pricing)
+*   Response time: 4-6 seconds (two sequential LLM calls)
+*   Cost per request: ~$0.0002 (GPT-4o-mini pricing)
 
 ## Future Improvements
 
-- Caching for common error patterns
-- Batch processing endpoint
-- Historical error database
-- Pattern recognition across logs
+*   Caching for common error patterns
+*   Batch processing endpoint
+*   Historical error database
+*   Pattern recognition across logs
 
 ## License
 
